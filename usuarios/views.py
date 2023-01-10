@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from django.contrib import messages
 
 
@@ -23,14 +24,21 @@ def cadastro(request):
             return render(request, 'usuarios/cadastro.html')
 
         try:
-            user = User.objects.create_user(
-                username=nome,
-                email=email,
-                password=senha,
-            )
-            user.full_clean()
-            messages.success(request, 'Cadastrado com sucesso!')
-            return render(request, 'usuarios/cadastro.html')
+            user = authenticate(username=nome)
+            if user is not None:
+                user_cadastrar = User.objects.create_user(
+                    username=nome,
+                    email=email,
+                    password=senha,
+                )
+                user_cadastrar.full_clean()
+                messages.success(request, 'Cadastrado com sucesso!')
+                return render(request, 'usuarios/cadastro.html')
+            else:
+                messages.warning(request, 'Usuário já existe!')
+                return render(request, 'usuarios/cadastro.html')
+
         except (ValueError):
             messages.error(request, 'Error interno do sistema.')
             return render(request, 'usuarios/cadastro.html')
+
