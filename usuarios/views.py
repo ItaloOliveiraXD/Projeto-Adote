@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.contrib import messages
 
 
 def cadastro(request):
-    
+
     if request.user.is_authenticated:
         return redirect('/divulgar/novo_pet')
 
@@ -70,3 +70,8 @@ def logar(request):
         else:
             messages.warning(request, 'Usuário ou senha incorreto!')
             return render(request, 'usuarios/login.html')
+
+
+def sair(request):
+    logout(request)
+    return redirect('/auth/login')
