@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def novo_pet(request):
+    if request.method == 'GET':
+        return render(request, 'divulgar/novo_pet.html')
